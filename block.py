@@ -5,7 +5,7 @@ import pygame
 class Block:
     def __init__(self, id):
         self.id = id # The most important thing is to distinguish between different blocks, so each block will have a unique id. To add this attribute, we can create an "id" attribute in the class. We need to pass this id as an argument in the init method.
-        self.cells = {} # To represent the cells that the block occupies in a 4x4 grid for all rotation states, we will create an attribute called cells. Self.cells = This attribute will be a dictionary, so we initialize it with an empty set of curly braces {}. We will use this dictionary to store the occupied cells in the bounding grid for each rotation state of the block. A dictionary in Python is a collection of key-value pairs, where each key is unique and maps to a corresponding value.
+        self.cells = {} # To represent the cells that the block occupies in a 4x4 grid for all rotation states, we will create an attribute called cells 'self.cells =' This attribute is a dictionary, so we initialize it with an empty set of curly braces {}. We will use this dictionary to store the occupied cells in the bounding grid for each rotation state of the block. A dictionary in Python is a collection of key-value pairs, where each key is unique and maps to a corresponding value.
         self.cell_size = 30 # We need to know the size of each cell of the block in pixels. Let’s make each cell 30 pixels in width and height.
         self.row_offset = 0 # We need to offset the positions of all cells in block to move it. One way to do this is by adding two attributes to the block class. These attributes will hold the row and column offset of the block on the game grid. We can then update the position of each cell by adding the offste to its current position. So we create two attributes: 'self.row_offset' and 'self.row_offset' and place the value of 0 for each attribute.
         self.column_offset = 0
@@ -23,6 +23,16 @@ class Block:
             position = Position(position.row + self.row_offset, position.column + self.column_offset)
             moved_tiles.append(position) # We have to append the new position to the moved_tiles list. 
         return moved_tiles # Returns the list
+    
+    def rotate(self): # Create a rotate method for the block.
+        self.rotation_state += 1 # Increase the rotation state by 1. 
+        if self.rotation_state == len(self.cells): # We also need to check if the rotation state is equal to the number of rotation states the block has. Typically, blocks have 4 rotation states, except for the O-Block which only has one. if the rotation state reaches the maximum number of states for the block, we need to reset it back to 0. We can implement this by adding a conditional chack after incrementing the rotation state.
+            self.rotation_state = 0 # This applies to all, except for the O-Block.
+    
+    def undo_rotation(self): # Create the block rotate check method. It will check if the block rotation state is out of the grid and if True will rotate it one position back.
+        self.rotation_state -= 1 # This sets rotation state block to the previous one.
+        if self.rotation_state == 0: # Check if the rotation state is 0. In that case we will reset it.
+            self.rotation_state = len(self.cells) - 1
 
     def draw(self, screen): # Create draw method that will be responsible for drawing the block on the screen. We need to know the surface we are going to draw on, so we pass it as an argument (self, screen). 
         tiles = self.get_cell_positions() # We have access in Position class to all the cells of the block for every rotation state. This line retrieves the list of positions for the current rotation state of the tetromino, as determined by the value of the self.rotation_state attribute. After we created def get_cell_positions(self) method we changed this line 'tiles = self.cells[self.rotation_state]' to 'tiles = self.get_cells_positions()'. 

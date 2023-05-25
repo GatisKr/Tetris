@@ -1,5 +1,6 @@
 # Tetris
-Classic Tetris game built with Pygame
+Classic Tetris game built with Pygame. Detailed game biulding tutorial is available here https://youtu.be/nF_crEtmpBo
+Below is the description of key elements for building the game.
 
 # Create Game Loop
 1. Event Handling: to check for any events that occur in the game, such as quitting the game, a key pressed on the keyboard, etc. This is done using the Pygame event handling system.

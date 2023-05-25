@@ -26,6 +26,8 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
                 game.move_right()
             if event.key == pygame.K_DOWN:
                 game.move_down()
+            if event.key == pygame.K_UP: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
+                game.rotate()
 
     # Drawing
     screen.fill(dark_blue) # Inside the game loop, before updating the screen, we call the fill method of the screen like this. The fill method just fills the display surface, our canvas, with the colour we define. In this case, dark_blue.

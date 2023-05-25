@@ -31,6 +31,11 @@ class Game:
         if self.block_inside() == False:
             self.current_block.move(-1, 0)
 
+    def rotate(self): # Create rotate method
+        self.current_block.rotate()
+        if self.block_inside() == False:
+            self.current_block.undo_rotation() # Undo the rotation if the block is otside the grid.
+
     def block_inside(self): # Check if the block is inside game window using the is_inside method of the Grid class.
         tiles = self.current_block.get_cell_positions() # First get the list of all the tiles or cells of the block.
         for tile in tiles: # Check if any tile of the block is outside of the grid.
