@@ -18,22 +18,37 @@ class Game:
     
     def move_left(self): # Create block move method
         self.current_block.move(0, -1) # This moves current block to the left for one tile.
-        if self.block_inside() == False: # Modify the move_left, move_right and move_down methods to check if after moving the block it is still inside the game window. 
+        if self.block_inside() == False or self.block_fits() == False: # Modify the move_left, move_right and move_down methods to check if after moving the block it is still inside the game window. The line 'self.block_fits() == False' checks if the block after moving one column to the left is inside the game window or if the block fits in its new position. If this is False, we undo move, it is not a valid move.
             self.current_block.move(0, 1) # If the block moves outside of the game window we have to move it back in, so we undo the move. 
 
     def move_right(self): # Create block move method
         self.current_block.move(0, 1)
-        if self.block_inside() == False:
+        if self.block_inside() == False or self.block_fits() == False:
             self.current_block.move(0, -1)
         
     def move_down(self): # Create block move method
         self.current_block.move(1, 0)
-        if self.block_inside() == False:
+        if self.block_inside() == False or self.block_fits() == False: # We need to check if the block after moving one row down is inside the game window or if the block fits in its new position. So we add 'or self.block_fits == False' at the end of the line. Now if we attempt to move the block down and encounter a cell that is already occupied, we undo the move and lock the block in place.
             self.current_block.move(-1, 0)
+            self.lock_block() # This method locks the block when it is at the bottom of the window.
+    
+    def lock_block(self):
+        tiles = self.current_block.get_cell_positions() # In this method we need to update the game grid values to represent the location of each cell of the block on the grid at the time it touches the bottom of the screen. For each cell we will store the ID of the block, in the corresponding cell on the game grid. The ID value also corresponds to the block's colour. This will mark the cells as locked and indicate that the block has reached its final position at the bottom of the game window. First we get the current positions of all the tiles of the block.
+        for position in tiles:
+            self.grid.grid[position.row][position.column] = self.current_block.id # For each cell position we will store the ID of the block in the grid.
+        self.current_block = self.next_block # Spawn new block on the screen. We already know which is the next block, it is saved in the next_block attribute.
+        self.next_block = self.get_random_block() # This line spawns a new random block.
+
+    def block_fits(self): # Create method that will check every cell of a block to see if it is on top of an empty cell of the grid or not.
+        tiles = self.current_block.get_cell_positions()
+        for tile in tiles:
+            if self.grid.is_empty(tile.row, tile.column) == False: # We need to check if any of the cells is occupied.
+                return False
+        return True # If all the cells are empty we return True, the block can move to the specified position. 
 
     def rotate(self): # Create rotate method
         self.current_block.rotate()
-        if self.block_inside() == False:
+        if self.block_inside() == False or self.block_fits() == False:
             self.current_block.undo_rotation() # Undo the rotation if the block is otside the grid.
 
     def block_inside(self): # Check if the block is inside game window using the is_inside method of the Grid class.

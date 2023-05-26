@@ -18,9 +18,14 @@ class Grid:
     def is_inside(self, row, column): # Create method that will check if a given tile position is inside the grid. If the position, row and column, is inside the grid we retun True, else we return false.
         if row >= 0 and row < self.num_rows and column >= 0 and column < self.num_cols:
             return True
-        return False
+        return False 
 
     # Method def get_cell_colors(self): removed as we created Colors class and we don't need it any more. 
+
+    def is_empty(self, row, column): # Create a method to check if grid cells are occupied. When we move the block one row to the bottom, we need to check if the cells of the grid the block occupies are empty or not. If they are not empty we have to undo the move and lock the block in place on the grid.
+        if self.grid[row][column] == 0:
+            return True
+        return False        
 
     def draw(self, screen): # Create a Draw method. This code will draw each cell of the grid with a specific colour. With dark_grey colour if the cell contains 0, with green colour if the cell contains the value of 1 and so on. First, we get the value stored in each cell of the grid. We use a nested loop for this.
         for row in range(self.num_rows):
