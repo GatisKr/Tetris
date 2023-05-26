@@ -8,6 +8,7 @@ class Game:
         self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()] # Create the attribute to hold the current block that is visible on the screen. To do this we have to select a random block from all the available blocks in the game. First we create a list of all the blocks. Now we create all the blocks. 
         self.current_block = self.get_random_block() # Create the two attributes for the current and the next block. 
         self.next_block = self.get_random_block()
+        self.game_over = False
         
     def get_random_block(self): # Now we can create a method that returns a random block from this list, so we need to import the random module. 
         if len(self.blocks) == 0: # At some point, the list will become empty, meaning no more blocks will be available. In that case we can simply refill the list with all the blocks again. So before selecting a random block we have to check if the list is empty.
@@ -39,6 +40,14 @@ class Game:
         self.current_block = self.next_block # Spawn new block on the screen. We already know which is the next block, it is saved in the next_block attribute.
         self.next_block = self.get_random_block() # This line spawns a new random block.
         self.grid.clear_full_rows() # Call a 'clear_full_rows' method from the Grid class.
+        if self.block_fits() == False: # When we lock a block in the grid we create a new block. We have to check if that new block fits in the grid. If the block does not fit we have to end the game. So we create a game_over attribute to the game class and set it to False (def __init__(self) section).
+            self.game_over = True # Set game_over attribute to True when the game ends.
+    
+    def reset(self): # Create a reset method to restart the game after game over by pressing a key.
+        self.grid.reset() # Clear the grid.
+        self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()] # When the game is reset we need to select a new random current_block from the list of blocks and a new next_block. We have to create a new list with all the blocks.
+        self.current_block = self.get_random_block() # Select a random block to be the current block and another one to be the next block.
+        self.next_block = self.get_random_block()
 
     def block_fits(self): # Create method that will check every cell of a block to see if it is on top of an empty cell of the grid or not.
         tiles = self.current_block.get_cell_positions()

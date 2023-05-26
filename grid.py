@@ -53,6 +53,11 @@ class Grid:
                 self.move_row_down(row, completed)
         return completed # Return the completed rows. We will need them to calculate the score later on.
 
+    def reset(self): # Create a method to clear the grid after game reset.
+        for row in range(self.num_rows): # Loop through all the cells and set their value to zero.
+            for column in range(self.num_cols):
+                self.grid[row][column] = 0
+
     def draw(self, screen): # Create a Draw method. This code will draw each cell of the grid with a specific colour. With dark_grey colour if the cell contains 0, with green colour if the cell contains the value of 1 and so on. First, we get the value stored in each cell of the grid. We use a nested loop for this.
         for row in range(self.num_rows):
             for column in range(self.num_cols):

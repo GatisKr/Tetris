@@ -15,7 +15,7 @@ game = Game() # Create game object.
 # prior creating Game class. game_grid = Grid() # Create Grid object.
 
 GAME_UPDATE = pygame.USEREVENT # USEREVENT is a special event type in pygame that can be used to create custom events. In this case it is used to create an event that will be triggered every time the block's position needs to be updated.
-pygame.time.set_timer(GAME_UPDATE, 400) # We want to triger this event every 200 milliseconds. This function creates a timer that will trigger the GAME_UPDATE event every 200 milliseconds. The first argument is the event that needs to be triggered and the second argument is interval in milliseconds. In this way we are ensuring that the game is updating the position of the block every 200 milliseconds and not 60 times per second, avoiding the problem of the block moving too fast.
+pygame.time.set_timer(GAME_UPDATE, 500) # We want to triger this event every 200 milliseconds. This function creates a timer that will trigger the GAME_UPDATE event every 200 milliseconds. The first argument is the event that needs to be triggered and the second argument is interval in milliseconds. In this way we are ensuring that the game is updating the position of the block every 200 milliseconds and not 60 times per second, avoiding the problem of the block moving too fast.
 
 while True: # Game Loop starts with a wile loop like this. While loop is essential part of the game. It runs continuously until the player closes the game. At each iteration of the loop three key steps are performed: checking for events, updating positions of game objects and drawing the game objects in their new positions. Important to note that before running the game it is essential to ensure that the code inside the wile loop has been fully written. If the code is run at this point, the while loop will run indefinitely since there is no defined way to stop its execution. In the next step adding the necessary code to stop the while loop is needed.
     for event in pygame.event.get(): # This line of code gets all the events that Pygame recognizes and happened since the last time the while loop ran and puts them in a list. Then we loop through the list of events and check if any of the events is the QUIT event. The QUIT event is when we click on the close button of the window. If the event is the QUIT event, we break out of the while loop.
@@ -23,15 +23,18 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             pygame.quit()
             sys.exit() # This command closes the game completely. This command is part of the SYS module, so it has to be imported as Pygame module.
         if event.type == pygame.KEYDOWN: # Create block movement by player input. This line of code checks if the event type is equal to the KEYDOWN constant, which means the player has pressed a key. We need to determine which key the player pressed. We can do this by using the 'event.key' attribute. This attribute returns a constant representing the key that was pressed. For example, to check if the player pressed tle LEFT arrow key, we can use this if statement:
-            if event.key == pygame.K_LEFT: # This line of code checks if the event.key constant is equal to the pygame.K_LEFT constant, which represents the LEFT arrow key. If the player presses the LEFT arrow key, we have to move the block one cell to the left. We can acheve this by using the move method of the block class to move the block one column to the left. However, instead of calling the move method of the block directly, we will create a new method called move_left in the game class, as we want to encapsulate the game logic for handling the movement of the block. 
+            if game.game_over == True: # Restart the game after game over by pressing a key.
+                game.game_over = False # The game is over and the key is pressed, we need to restart the game. We have to set the game_over attribute to False.
+                game.reset() # Calls a reset method to restart the game.
+            if event.key == pygame.K_LEFT and game.game_over == False: # This line of code checks if the event.key constant is equal to the pygame.K_LEFT constant, which represents the LEFT arrow key. If the player presses the LEFT arrow key, we have to move the block one cell to the left. We can acheve this by using the move method of the block class to move the block one column to the left. However, instead of calling the move method of the block directly, we will create a new method called move_left in the game class, as we want to encapsulate the game logic for handling the movement of the block. 
                 game.move_left()
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_RIGHT and game.game_over == False:
                 game.move_right()
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_DOWN and game.game_over == False:
                 game.move_down()
-            if event.key == pygame.K_UP: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
+            if event.key == pygame.K_UP and game.game_over == False: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
                 game.rotate()
-        if event.type == GAME_UPDATE: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed.
+        if event.type == GAME_UPDATE and game.game_over == False: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed. # Stop the game from upating every 200 ms if the game is over and don't let the user move the block if the game is over. Added 'game.game_over == False'. This means the game will only update if it is not over.
             game.move_down()
 
     # Drawing
