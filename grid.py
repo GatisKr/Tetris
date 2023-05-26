@@ -25,7 +25,33 @@ class Grid:
     def is_empty(self, row, column): # Create a method to check if grid cells are occupied. When we move the block one row to the bottom, we need to check if the cells of the grid the block occupies are empty or not. If they are not empty we have to undo the move and lock the block in place on the grid.
         if self.grid[row][column] == 0:
             return True
-        return False        
+        return False
+    
+    def is_row_full(self, row): # Create method to check if a row is full. This method has a 'row' as an argument. 
+        for column in range(self.num_cols): # Check if any of the cells in a row are empty (i.e. have value of zero). If any cell is empty, then the row is not considered full. We need to get every column of the grid.
+            if self.grid[row][column] == 0: # Check if value of the cell is zero.
+                return False
+        return True
+    
+    def clear_row(self, row): # Create a method that will clear a row. It will set the value of each cell of that row to zero. We need a row as an argument.
+        for column in range(self.num_cols): # We get all the columns.
+            self.grid[row][column] = 0 # Set the value of each cell of that row to 0.
+
+    def move_row_down(self, row, num_rows): # Create a method to move a row down by a specific number of rows. We need two arguments, the row to move down and how many rows to move down.
+        for column in range(self.num_cols): # Get all the columns
+            self.grid[row+num_rows][column] = self.grid[row][column] # Change the values of the destination row to be equal to the current row.
+            self.grid[row][column] = 0 # Clear the current row. In summary, this code moves a row in the grid down by num_rows rows by copying the values from the original row to a new row and clearing the original row.
+
+    def clear_full_rows(self): # Create a method that combines the above methods 'is_row_full', 'clear_row', 'move_row_down'. This method will check all the rows from the bottom to the top to see if any row is completed. So we need a completed variable.
+        completed = 0
+        for row in range(self.num_rows-1, 0, -1): # We need to check every row, starting from row 19 and moving down to row 0. This for loop iterates through the rows of the grid in reverse order, starting from the last row and going up to the first row (row 0), with a step of -1 to move upward.
+            if self.is_row_full(row): # Check if current row is full using the is_row_full method we wrote. If the row is full we have to call the clear_row method to clear all the cells in the current row.
+                self.clear_row(row)
+                completed += 1 # Increment the completed counter by 1 to keep track of the number of rows completed. 
+                # If current row is not full, but some rows have already been cleared, it means we have to move that row down.
+            elif completed > 0:
+                self.move_row_down(row, completed)
+        return completed # Return the completed rows. We will need them to calculate the score later on.
 
     def draw(self, screen): # Create a Draw method. This code will draw each cell of the grid with a specific colour. With dark_grey colour if the cell contains 0, with green colour if the cell contains the value of 1 and so on. First, we get the value stored in each cell of the grid. We use a nested loop for this.
         for row in range(self.num_rows):

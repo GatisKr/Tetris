@@ -1,5 +1,5 @@
 # Tetris
-Classic Tetris game built with Pygame. Detailed game biulding tutorial is available here https://youtu.be/nF_crEtmpBo
+Classic Tetris game built with Pygame. Detailed game building tutorial is available here https://youtu.be/nF_crEtmpBo
 Below is the description of key elements for building the game.
 
 # Create Game Loop
@@ -30,3 +30,6 @@ In order to improve code organization and make it easiert to manage in the futur
 
 # Implement boundary checking
 Since we know that the game grid contains 20 rows and 10 columns, we can simply check the current position of each tile of the block. If any of the tiles has moved outside of the game window, we need to move it back within the boundary of the game window.
+
+# Checking for completed rows
+We have to check if a row is full, and when it is, have to clear it and move all the occupied cells above that row, one row down. We will scan every row of the grid from the bottom to the top. We need a variable to hold the number of completed rows. If we find a completed row we will increase the completed variable by 1. Then we will clear the row and check the next row. If it is not completed, we will move the row down by the value the completed variable contains. This procedure works for any number of completed rows. For instance, if we find 2 completed rows: we check the first row, it is completed, so ve increase the completed variable by 1 and we clear the row. Then we check the next row. It is completed, so we increase the completed variable by 1, it is now two, and we clear the row. Next we check the next row, it is not completed, so we have to move this row down by exactly two rows. And with the same procedure we check every row of the grid. 

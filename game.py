@@ -38,6 +38,7 @@ class Game:
             self.grid.grid[position.row][position.column] = self.current_block.id # For each cell position we will store the ID of the block in the grid.
         self.current_block = self.next_block # Spawn new block on the screen. We already know which is the next block, it is saved in the next_block attribute.
         self.next_block = self.get_random_block() # This line spawns a new random block.
+        self.grid.clear_full_rows() # Call a 'clear_full_rows' method from the Grid class.
 
     def block_fits(self): # Create method that will check every cell of a block to see if it is on top of an empty cell of the grid or not.
         tiles = self.current_block.get_cell_positions()
