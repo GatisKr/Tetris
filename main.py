@@ -1,12 +1,22 @@
 import pygame, sys # Import Pygame and SYS modules. 
 from game import Game
+from colors import Colors
 # prior creating Game class. from grid import Grid # Import the Grid class from the file grid.py. 
 # prior creating Game class. from blocks import * # Import the all the classes from the file blocks.py. Asterisk '*' symbol is used to import all the classes.
 
 pygame.init()
-dark_blue = (44, 44, 127) # Drawing. Pygame provides several built-in colours, however we can define our all colours for this game. In Pygame colours are represented as a tuple of three values, each value representing the amount of red, green and blue in the colour. The values for each component range from 0 to 255, where 0 represents the absence of the colour and 255 represents the full intensity of the colour. For example, to create a red colour, we would create a tuple with the following values: red = (255, 0 ,0). These values represent the red, green and blue components respectively. To create a dark blue colour we will create a tuple like this.
 
-screen = pygame.display.set_mode((300, 600)) # Create dispay surface # This line of code creates a display surface object named screen. The set_mode() method takes a tuple as an argument. The first value is the width and the second value is the height of the display surface, our canvas. This line created the game window and to draw on it a top-left corner coordinate system with unique x and y values is used (0, 0 value is in the top left corner, which is different from standart Cartesian coordinate system. The x-coordinate increases as we move to the right and the y-coordinate increases as we move down).
+title_font = pygame.font.Font(None, 40) # Create a font. Arguments for the font command are: Font(font family, size). In current code line 'None' stands for the default font.
+score_surface = title_font.render("Score", True, Colors.white) # Create a surface for the title. We use the render method from title_font object. We pass in the string that we want to display, "Score". We set the anti-alias argument to True and finally we set the color of the font.
+next_surface = title_font.render("Next", True, Colors.white) # Create 'next block' title
+game_over_surface = title_font.render("GAME OVER", True, Colors.white) # Create GAME OVER surface
+
+score_rect = pygame.Rect(320, 55, 170, 60) # Add a rounded rectangle of light_blue color to draw the score on. First create a rectangle object. We need the x and y coordinate of its top left corner, eidth and the height of the rectangle.
+next_rectangle = pygame.Rect(320, 210, 170, 180) # Create a rect to display the next shape
+
+# Drawing. Pygame provides several built-in colours, however we can define our all colours for this game. In Pygame colours are represented as a tuple of three values, each value representing the amount of red, green and blue in the colour. The values for each component range from 0 to 255, where 0 represents the absence of the colour and 255 represents the full intensity of the colour. For example, to create a red colour, we would create a tuple with the following values: red = (255, 0 ,0). These values represent the red, green and blue components respectively. To create a dark blue colour we will create a tuple like this 'dark_blue = (44, 44, 127)'.
+
+screen = pygame.display.set_mode((500, 620)) # Create dispay surface # This line of code creates a display surface object named screen. The set_mode() method takes a tuple as an argument. The first value is the width and the second value is the height of the display surface, our canvas. This line created the game window and to draw on it a top-left corner coordinate system with unique x and y values is used (0, 0 value is in the top left corner, which is different from standart Cartesian coordinate system. The x-coordinate increases as we move to the right and the y-coordinate increases as we move down).
 pygame.display.set_caption("Python Tetris") # Create game window title
 
 clock = pygame.time.Clock() # Create clock object. 
@@ -38,10 +48,18 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.move_down()
 
     # Drawing
-    screen.fill(dark_blue) # Inside the game loop, before updating the screen, we call the fill method of the screen like this. The fill method just fills the display surface, our canvas, with the colour we define. In this case, dark_blue.
+    screen.fill(Colors.dark_blue) # Inside the game loop, before updating the screen, we call the fill method of the screen like this. The fill method just fills the display surface, our canvas, with the colour we define. In this case, dark_blue.
     # prior creating Game class. game_grid.draw(screen) # Call the draw method of the grid object we have created inside the main loop. We type here game_grid.draw() and pass in the screen display surface.
     # prior creating Game class. block.draw(screen) # Call draw method to draw the LBlock. 
+    screen.blit(score_surface, (365, 20, 50, 50)) # Call the blit method to display the score_surface on the display_surface which we have named screen. 'Blit' means 'block image transfer'. Most of the time in pygame we blitting images to the display_surface. We have to pass in the surface that we want to display and the location on the screen.
+    screen.blit(next_surface, (375, 180, 50 ,50))
+    
+    if game.game_over == True: # Implement a check in the game loop before drawing the game over message to ensure that the message is only shown when th game is actually over.
+        screen.blit(game_over_surface, (320, 450, 50 ,50))
+    
+    pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10) # Print score_rect. '0, 10' makes rectangle with rounded corners.
+    pygame.draw.rect(screen, Colors.light_blue, next_rectangle, 0, 10)
     game.draw(screen)
-
+    
     pygame.display.update() # Update screen. This line of code takes all the changes made to the game objects and draws a picture from them. Since no any game objejcts are created yet, this line just draws a black screen. This wa the gridlines become visible, making the game more understandable and easier to play. 
     clock.tick(60) # Game clock object sets the speed how fast the game should run. This is done by using the tick() method. The tick() method takes an integer as an argument and that integer is the number of frames per second that we want. 60 frames per seconds are used in this game. This means that the wile loop and all the code inside it will run 60 times every second. If a frame rate is not set, the game would run as fast as the computer can handle, which could lead to inconsistencies in the games's speed. By setting the frame rate we make sure that the game runs smoothly and at the same speed for all players. 

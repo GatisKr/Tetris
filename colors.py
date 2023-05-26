@@ -7,6 +7,9 @@ class Colors: # Create a class that will return a list of 8 colours. A colour is
     purple = (166, 0, 247)
     cyan = (21, 204, 209)
     blue = (13, 64, 216)
+    white = (255, 255, 255)
+    dark_blue = (44, 44, 127)
+    light_blue = (59, 85, 162)
 
     @classmethod # is a Python decorator that allows to define a method that can be called on a class rather than on an instance of the class. Now we can create the method we want.
     def get_cell_colors(cls): # We  need to pass in 'cls' here. This way we can access the attributes of the class. 'cls' is a reference to the class itself and it allows us to access the class-level attributes and methods. It's similar to using self to access instance-level attributes and methods, but 'cls' is used for the class-level 

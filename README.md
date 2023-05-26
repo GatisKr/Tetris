@@ -1,5 +1,6 @@
 # Tetris
 Classic Tetris game built with Pygame. Detailed game building tutorial is available here https://youtu.be/nF_crEtmpBo
+
 Below is the description of key elements for building the game.
 
 # Create Game Loop
@@ -36,3 +37,12 @@ We have to check if a row is full, and when it is, have to clear it and move all
 
 # Game over
 The game ends when a newly spawned block overlaps with a block that is already locked in place on the grid, preventing further movement or placement of the new block. In this game game, the new block is spawned at the top of the screen, similar to the online version of Tetris. However, in some versions of Tetris, the new block is spawned outside of the visible screen and then gradually slides into the play area, one row at a time. To check if the game has to end, we have to check if the newly created block fits in the grid. If it does not fit, the game is over.
+
+# User interface
+The user interface consists of several components: a background rectangle that serves as the canvas on which all the game elements are drawn; a title text element for displaying the score; a rounded rectangle to display the score value; a text element for rendering the actual score value; a title text element for displaying the upcoming shape (next shape); a rounded rectangle to display the next shape; the actual next block shape itself; a title text element for displaying the Game Over message. This elements work together to create the visual interface for the game, providing information on the score, the next shape and the game over condition. 
+
+# How to display text
+In Pygame to create and display text we need to follow three steps.
+1. Create a font. 
+2. Surface with the text we want to display.
+3. Display the surface using the .blit() method of the display surface object. 
