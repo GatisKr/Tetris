@@ -42,12 +42,14 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
                 game.move_right()
             if event.key == pygame.K_DOWN and game.game_over == False:
                 game.move_down()
+                game.update_score(0, 1) # Add score when the down key is pressed
             if event.key == pygame.K_UP and game.game_over == False: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
                 game.rotate()
         if event.type == GAME_UPDATE and game.game_over == False: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed. # Stop the game from upating every 200 ms if the game is over and don't let the user move the block if the game is over. Added 'game.game_over == False'. This means the game will only update if it is not over.
             game.move_down()
 
     # Drawing
+    score_value_surface = title_font.render(str(game.score), True, Colors.white) # The score is dynamic and changes as the player moves the block. That's why we create a new surface for the score each time we want to update and display it on the screen. It is not a static text. So inside the game loop we create the 'score_surface'. The score is in integer, so we need to convert it to a string before displaying it, that's why we call the str() method here.
     screen.fill(Colors.dark_blue) # Inside the game loop, before updating the screen, we call the fill method of the screen like this. The fill method just fills the display surface, our canvas, with the colour we define. In this case, dark_blue.
     # prior creating Game class. game_grid.draw(screen) # Call the draw method of the grid object we have created inside the main loop. We type here game_grid.draw() and pass in the screen display surface.
     # prior creating Game class. block.draw(screen) # Call draw method to draw the LBlock. 
@@ -58,6 +60,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         screen.blit(game_over_surface, (320, 450, 50 ,50))
     
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10) # Print score_rect. '0, 10' makes rectangle with rounded corners.
+    screen.blit(score_value_surface, score_value_surface.get_rect(centerx = score_rect.centerx, centery = score_rect.centery)) # Display score_value_surface on top of the score_rect. We need to define the position on the screen where we want to draw the text. This is tricky, because the score is not static, its size will change. If we want it to be centered, we can use a small trick. The provided code calculates the rectangle that encloses the score_value_surface text and centers it on the score_rect horizontally and vertically, so that the score is displayed in the middle of the score rect.
     pygame.draw.rect(screen, Colors.light_blue, next_rectangle, 0, 10)
     game.draw(screen)
     
