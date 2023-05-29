@@ -1,6 +1,7 @@
 from grid import Grid
 from blocks import * # Asterisk symbol '*' imports everything from file blacks.py
 import random
+import pygame
 
 class Game:
     def __init__(self): # The game class must create and hold a grid. So we import the Grid class. 
@@ -10,6 +11,12 @@ class Game:
         self.next_block = self.get_random_block()
         self.game_over = False
         self.score = 0 # Create score count attribute class.
+        self.rotate_sound = pygame.mixer.Sound("Sounds/rotate.ogg")
+        self.clear_sound = pygame.mixer.Sound("Sounds/clear.ogg")
+        self.move_sound = pygame.mixer.Sound("Sounds/move.ogg")
+
+        pygame.mixer.music.load("Sounds/music.ogg")
+        pygame.mixer.music.play(-1) # This line of code plays the backgrounf music using pygame.mixer.music module, with the argument -1, indicating that the music should loop indefinitely.
     
     def update_score(self, lines_cleared, move_down_points): # Create a method for updating the score of the game. We need thw things to know: the number of lines cleared and the number of times the player moved a block down.
         if lines_cleared == 1: # Create if statements to award points according to how many lines the player has cleared. 
@@ -18,6 +25,8 @@ class Game:
             self.score += 300
         elif lines_cleared == 3:
             self.score += 500
+        elif lines_cleared == 4:
+            self.score += 700
         self.score += move_down_points
         
     def get_random_block(self): # Now we can create a method that returns a random block from this list, so we need to import the random module. 
@@ -36,13 +45,13 @@ class Game:
         self.current_block.move(0, 1)
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.move(0, -1)
-        
+
     def move_down(self): # Create block move method
         self.current_block.move(1, 0)
         if self.block_inside() == False or self.block_fits() == False: # We need to check if the block after moving one row down is inside the game window or if the block fits in its new position. So we add 'or self.block_fits == False' at the end of the line. Now if we attempt to move the block down and encounter a cell that is already occupied, we undo the move and lock the block in place.
             self.current_block.move(-1, 0)
             self.lock_block() # This method locks the block when it is at the bottom of the window.
-    
+
     def lock_block(self):
         tiles = self.current_block.get_cell_positions() # In this method we need to update the game grid values to represent the location of each cell of the block on the grid at the time it touches the bottom of the screen. For each cell we will store the ID of the block, in the corresponding cell on the game grid. The ID value also corresponds to the block's colour. This will mark the cells as locked and indicate that the block has reached its final position at the bottom of the game window. First we get the current positions of all the tiles of the block.
         for position in tiles:
@@ -50,7 +59,9 @@ class Game:
         self.current_block = self.next_block # Spawn new block on the screen. We already know which is the next block, it is saved in the next_block attribute.
         self.next_block = self.get_random_block() # This line spawns a new random block.
         rows_cleared = self.grid.clear_full_rows() # Call a 'clear_full_rows' method from the Grid class. The 'rows_cleared' variable collects and stores value of cleared rows. We need to call the update score method and pass in this variable as an argument.
-        self.update_score(rows_cleared, 0)
+        if rows_cleared > 0:
+            self.clear_sound.play()
+            self.update_score(rows_cleared, 0)
         if self.block_fits() == False: # When we lock a block in the grid we create a new block. We have to check if that new block fits in the grid. If the block does not fit we have to end the game. So we create a game_over attribute to the game class and set it to False (def __init__(self) section).
             self.game_over = True # Set game_over attribute to True when the game ends.
     
@@ -72,6 +83,8 @@ class Game:
         self.current_block.rotate()
         if self.block_inside() == False or self.block_fits() == False:
             self.current_block.undo_rotation() # Undo the rotation if the block is otside the grid.
+        else:
+            self.rotate_sound.play()
 
     def block_inside(self): # Check if the block is inside game window using the is_inside method of the Grid class.
         tiles = self.current_block.get_cell_positions() # First get the list of all the tiles or cells of the block.

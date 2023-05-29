@@ -43,6 +43,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             if event.key == pygame.K_DOWN and game.game_over == False:
                 game.move_down()
                 game.update_score(0, 1) # Add score when the down key is pressed
+                game.move_sound.play()
             if event.key == pygame.K_UP and game.game_over == False: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
                 game.rotate()
         if event.type == GAME_UPDATE and game.game_over == False: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed. # Stop the game from upating every 200 ms if the game is over and don't let the user move the block if the game is over. Added 'game.game_over == False'. This means the game will only update if it is not over.
