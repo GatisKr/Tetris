@@ -82,4 +82,11 @@ class Game:
 
     def draw(self, screen): # The game class will also have a draw method which will be responsible for drawing all the objects on the screen. We need to take the display surface to draw on as an argument. 
         self.grid.draw(screen)
-        self.current_block.draw(screen)
+        self.current_block.draw(screen, 11, 11) # Draw the current block. We need to modify the method to add the offset_x and offset_y values (screen, 11, 11). It is the hardcoded offset we removed from the draw method. 
+        
+        if self.next_block.id == 3: # Check the ID of the next block before it is drawn to correct center location for IBlock and OBlock.
+            self.next_block.draw(screen, 255, 290)
+        elif self.next_block.id == 4: # The OBlock
+            self.next_block.draw(screen, 255, 280)
+        else: 
+            self.next_block.draw(screen, 270, 270) # Draw the next block on the screen.

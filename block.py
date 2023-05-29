@@ -34,8 +34,8 @@ class Block:
         if self.rotation_state == 0: # Check if the rotation state is 0. In that case we will reset it.
             self.rotation_state = len(self.cells) - 1
 
-    def draw(self, screen): # Create draw method that will be responsible for drawing the block on the screen. We need to know the surface we are going to draw on, so we pass it as an argument (self, screen). 
+    def draw(self, screen, offset_x, offset_y): # Create draw method that will be responsible for drawing the block on the screen. We need to know the surface we are going to draw on, so we pass it as an argument (self, screen). We create an offset_x and offset_y arguments to display the 'next block'.
         tiles = self.get_cell_positions() # We have access in Position class to all the cells of the block for every rotation state. This line retrieves the list of positions for the current rotation state of the tetromino, as determined by the value of the self.rotation_state attribute. After we created def get_cell_positions(self) method we changed this line 'tiles = self.cells[self.rotation_state]' to 'tiles = self.get_cells_positions()'. 
         for tile in tiles: # For each cell we can draw a rectangle. We will use a for loop. 
-            tile_rect = pygame.Rect(tile.column * self.cell_size + 11, tile.row * self.cell_size + 11, self.cell_size -1, self.cell_size -1) # Create rectangle for each cell. We use the pygame.Rect method, so we import Pygame. As we did in the grid class we leave a one pixel offset when we draw the cells. 
+            tile_rect = pygame.Rect(offset_x + tile.column * self.cell_size, offset_y + tile.row * self.cell_size, self.cell_size -1, self.cell_size -1) # Create rectangle for each cell. We use the pygame.Rect method, so we import Pygame. As we did in the grid class we leave a one pixel offset when we draw the cells. We add an offset to display the next block.
             pygame.draw.rect(screen, self.colors[self.id], tile_rect) # Draw the cell. The colour value of the cell is obtained from the colors list using the block's ID as the index. 
