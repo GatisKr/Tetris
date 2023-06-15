@@ -14,11 +14,12 @@ class Game:
         self.rotate_sound = pygame.mixer.Sound("Sounds/rotate.ogg")
         self.clear_sound = pygame.mixer.Sound("Sounds/clear.ogg")
         self.move_sound = pygame.mixer.Sound("Sounds/move.ogg")
+        self.level_sound = pygame.mixer.Sound("Sounds/level.ogg")
 
         pygame.mixer.music.load("Sounds/music.ogg")
         pygame.mixer.music.play(-1) # This line of code plays the backgrounf music using pygame.mixer.music module, with the argument -1, indicating that the music should loop indefinitely.
     
-    def update_score(self, lines_cleared, move_down_points): # Create a method for updating the score of the game. We need thw things to know: the number of lines cleared and the number of times the player moved a block down.
+    def update_score(self, lines_cleared, move_down_points): # Create a method for updating the score of the game. We need two things to know: the number of lines cleared and the number of times the player moved a block down.
         if lines_cleared == 1: # Create if statements to award points according to how many lines the player has cleared. 
             self.score += 100
         elif lines_cleared == 2:
@@ -28,7 +29,7 @@ class Game:
         elif lines_cleared == 4:
             self.score += 700
         self.score += move_down_points
-        
+    
     def get_random_block(self): # Now we can create a method that returns a random block from this list, so we need to import the random module. 
         if len(self.blocks) == 0: # At some point, the list will become empty, meaning no more blocks will be available. In that case we can simply refill the list with all the blocks again. So before selecting a random block we have to check if the list is empty.
             self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
