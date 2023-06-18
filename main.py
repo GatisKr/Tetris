@@ -9,17 +9,10 @@ pygame.init()
 title_font = pygame.font.Font(None, 40) # Create a font. Arguments for the font command are: Font(font family, size). In current code line 'None' stands for the default font.
 score_surface = title_font.render("Score", True, Colors.white) # Create a surface for the title. We use the render method from title_font object. We pass in the string that we want to display, "Score". We set the anti-alias argument to True and finally we set the color of the font.
 next_surface = title_font.render("Next", True, Colors.white) # Create 'next block' title
+game_level = 1
 game_over_surface = title_font.render("GAME OVER", True, Colors.white) # Create GAME OVER surface
-level_one = title_font.render("LEVEL 1", True, Colors.white) # Create Level surface
-level_two = title_font.render("LEVEL 2", True, Colors.white) # Create Level surface
-level_three = title_font.render("LEVEL 3", True, Colors.white) # Create Level surface
-level_four = title_font.render("LEVEL 4", True, Colors.white) # Create Level surface
-level_five = title_font.render("LEVEL 5", True, Colors.white) # Create Level surface
-level_six = title_font.render("LEVEL 6", True, Colors.white) # Create Level surface
-level_seven = title_font.render("LEVEL 7", True, Colors.white) # Create Level surface
-level_eight = title_font.render("LEVEL 8", True, Colors.white) # Create Level surface
-level_nine = title_font.render("LEVEL 9", True, Colors.white) # Create Level surface
-level_sound_played = False # Seting level_sound_played to False allows to use if not statement on score update to play the sound only once within the game loop.
+level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white) # Create Level surface
+level_sound_played = 0 # level_sound_played variable is used to play the next level sound only once within the game loop.
 
 score_rect = pygame.Rect(320, 55, 170, 60) # Add a rounded rectangle of light_blue color to draw the score on. First create a rectangle object. We need the x and y coordinate of its top left corner, eidth and the height of the rectangle.
 next_rectangle = pygame.Rect(320, 210, 170, 180) # Create a rect to display the next shape
@@ -46,6 +39,9 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             if game.game_over == True: # Restart the game after game over by pressing a key.
                 game.game_over = False # The game is over and the key is pressed, we need to restart the game. We have to set the game_over attribute to False.
                 game.reset() # Calls a reset method to restart the game.
+                del(game_level, level_sound_played)
+                game_level = 1
+                level_sound_played = 0
                 pygame.time.set_timer(GAME_UPDATE, 500) # Reset game_update speed after game reset
             if event.key == pygame.K_LEFT and game.game_over == False: # This line of code checks if the event.key constant is equal to the pygame.K_LEFT constant, which represents the LEFT arrow key. If the player presses the LEFT arrow key, we have to move the block one cell to the left. We can acheve this by using the move method of the block class to move the block one column to the left. However, instead of calling the move method of the block directly, we will create a new method called move_left in the game class, as we want to encapsulate the game logic for handling the movement of the block. 
                 game.move_left()
@@ -66,7 +62,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             elif game.score >= 4000:
                 pygame.time.set_timer(GAME_UPDATE, 300)
             elif game.score >= 2000:
-                pygame.time.set_timer(GAME_UPDATE, 400)              
+                pygame.time.set_timer(GAME_UPDATE, 400)
         if event.type == GAME_UPDATE and game.game_over == False: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed. # Stop the game from upating every 200 ms if the game is over and don't let the user move the block if the game is over. Added 'game.game_over == False'. This means the game will only update if it is not over.
             game.move_down()
 
@@ -81,49 +77,83 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
     if game.game_over == True: # Implement a check in the game loop before drawing the game over message to ensure that the message is only shown when th game is actually over.
         screen.blit(game_over_surface, (320, 450, 50 ,50))
     
-    if game.score >= 16000: # This code updates level when relevant score value is reached
-        screen.blit(level_nine, (350, 500, 50 ,50))
-        if not level_sound_played:
+    # This code creates the next Level text with updated Level variable and plays the next Level sound.
+    if game.score >= 16000: # This block of code updates level when relevant score value is reached.
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 8:
+            game_level += 1
+        if level_sound_played == 7:
             game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 14000:
-        screen.blit(level_eight, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 12000:
-        screen.blit(level_seven, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 10000:
-        screen.blit(level_six, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 8000:
-        screen.blit(level_five, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 6000:
-        screen.blit(level_four, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 4000:
-        screen.blit(level_three, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score >= 2000:
-        screen.blit(level_two, (350, 500, 50 ,50))
-        if not level_sound_played:
-            game.level_sound.play()
-            level_sound_played = True
-    elif game.score < 2000:
-        screen.blit(level_one, (350, 500, 50 ,50))
+            level_sound_played += 1
 
+    elif game.score >= 14000 and game.score < 16000: # Level 9
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 7:
+            game_level += 1
+        if level_sound_played == 6:
+            game.level_sound.play()
+            level_sound_played += 1
+
+    elif game.score >= 12000 and game.score < 14000: # Level 8
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 6:
+            game_level += 1
+        if level_sound_played == 5:
+            game.level_sound.play()
+            level_sound_played += 1
+
+    elif game.score >= 10000 and game.score < 12000: # Level 7
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 5:
+            game_level += 1
+        if level_sound_played == 4:
+            game.level_sound.play()
+            level_sound_played += 1
+
+    elif game.score >= 8000 and game.score < 10000: # Level 6
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 4:
+            game_level += 1
+        if level_sound_played == 3:
+            game.level_sound.play()
+            level_sound_played += 1
+
+    elif game.score >= 6000 and game.score < 8000: # Level 4
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 3:
+            game_level += 1
+        if level_sound_played == 2:
+            game.level_sound.play()
+            level_sound_played += 1
+
+    elif game.score >= 4000 and game.score < 6000: # Level 3
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 2:
+            game_level += 1
+        if level_sound_played == 1:
+            game.level_sound.play()
+            level_sound_played += 1
+            
+    elif game.score >= 2000 and game.score < 4000: # Level 2
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 1:
+            game_level += 1
+        if level_sound_played == 0:
+            game.level_sound.play()
+            level_sound_played += 1
+            
+    else: # Level 1
+        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+    
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10) # Print score_rect. '0, 10' makes rectangle with rounded corners.
     screen.blit(score_value_surface, score_value_surface.get_rect(centerx = score_rect.centerx, centery = score_rect.centery)) # Display score_value_surface on top of the score_rect. We need to define the position on the screen where we want to draw the text. This is tricky, because the score is not static, its size will change. If we want it to be centered, we can use a small trick. The provided code calculates the rectangle that encloses the score_value_surface text and centers it on the score_rect horizontally and vertically, so that the score is displayed in the middle of the score rect.
     pygame.draw.rect(screen, Colors.light_blue, next_rectangle, 0, 10)
@@ -131,6 +161,3 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
     
     pygame.display.update() # Update screen. This line of code takes all the changes made to the game objects and draws a picture from them. Since no any game objejcts are created yet, this line just draws a black screen. This wa the gridlines become visible, making the game more understandable and easier to play. 
     clock.tick(60) # Game clock object sets the speed how fast the game should run. This is done by using the tick() method. The tick() method takes an integer as an argument and that integer is the number of frames per second that we want. 60 frames per seconds are used in this game. This means that the wile loop and all the code inside it will run 60 times every second. If a frame rate is not set, the game would run as fast as the computer can handle, which could lead to inconsistencies in the games's speed. By setting the frame rate we make sure that the game runs smoothly and at the same speed for all players. 
-
-
-        
