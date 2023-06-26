@@ -102,7 +102,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         screen.blit(game_over_surface, (320, 450, 50 ,50))
     
     # This code creates the next 'Level' text surface with updated Level variable and plays the next Level sound.
-    if game.score >= 18000: # Level 10
+    if game.score >= 18000 and game.score <20000: # Level 10
         level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 9:
@@ -110,7 +110,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 8:
             game.level_sound.play()
             level_sound_played += 1
-    if game.score >= 16000: # Level 9
+    if game.score >= 16000 and game.score <18000: # Level 9
         level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 8:
