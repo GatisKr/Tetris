@@ -1,5 +1,5 @@
 from grid import Grid
-from blocks import * # Asterisk symbol '*' imports everything from file blacks.py
+from blocks import * # Asterisk symbol '*' imports everything from file blocks.py
 import random
 import pygame
 
@@ -23,11 +23,11 @@ class Game:
         if lines_cleared == 1: # Create if statements to award points according to how many lines the player has cleared. 
             self.score += 100
         elif lines_cleared == 2:
-            self.score += 300
+            self.score += 150
         elif lines_cleared == 3:
-            self.score += 500
+            self.score += 200
         elif lines_cleared == 4:
-            self.score += 700
+            self.score += 300
         self.score += move_down_points
     
     def get_random_block(self): # Now we can create a method that returns a random block from this list, so we need to import the random module. 

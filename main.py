@@ -1,4 +1,4 @@
-import pygame, sys # Import Pygame and SYS modules. 
+import pygame, sys # Import Pygame and SYS modules.
 from game import Game
 from colors import Colors
 # prior creating Game class. from grid import Grid # Import the Grid class from the file grid.py. 
@@ -8,14 +8,14 @@ pygame.init()
 
 title_font = pygame.font.Font(None, 40) # Create a font. Arguments for the font command are: Font(font family, size). In current code line 'None' stands for the default font.
 score_surface = title_font.render("Score", True, Colors.white) # Create a surface for the title. We use the render method from title_font object. We pass in the string that we want to display, "Score". We set the anti-alias argument to True and finally we set the color of the font.
-next_surface = title_font.render("Next", True, Colors.white) # Create 'next block' title
-game_level = 1
-game_over_surface = title_font.render("GAME OVER", True, Colors.white) # Create GAME OVER surface
-level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white) # Create Level surface
+next_surface = title_font.render("Next", True, Colors.white) # Create 'next block' title.
+game_level = 1 # Initialize game_level variable.
+game_over_surface = title_font.render("GAME OVER", True, Colors.white) # Create GAME OVER surface.
+level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white) # Create Level surface.
 level_sound_played = 0 # level_sound_played variable is used to play the next level sound only once within the game loop.
 
 score_rect = pygame.Rect(320, 55, 170, 60) # Add a rounded rectangle of light_blue color to draw the score on. First create a rectangle object. We need the x and y coordinate of its top left corner, eidth and the height of the rectangle.
-next_rectangle = pygame.Rect(320, 210, 170, 180) # Create a rect to display the next shape
+next_rectangle = pygame.Rect(320, 210, 170, 180) # Create a rect to display the next shape.
 
 # Drawing. Pygame provides several built-in colours, however we can define our all colours for this game. In Pygame colours are represented as a tuple of three values, each value representing the amount of red, green and blue in the colour. The values for each component range from 0 to 255, where 0 represents the absence of the colour and 255 represents the full intensity of the colour. For example, to create a red colour, we would create a tuple with the following values: red = (255, 0 ,0). These values represent the red, green and blue components respectively. To create a dark blue colour we will create a tuple like this 'dark_blue = (44, 44, 127)'.
 
@@ -29,6 +29,24 @@ game = Game() # Create game object.
 
 GAME_UPDATE = pygame.USEREVENT # USEREVENT is a special event type in pygame that can be used to create custom events. In this case it is used to create an event that will be triggered every time the block's position needs to be updated.
 pygame.time.set_timer(GAME_UPDATE, 500) # We want to triger this event every 200 milliseconds. This function creates a timer that will trigger the GAME_UPDATE event every 200 milliseconds. The first argument is the event that needs to be triggered and the second argument is interval in milliseconds. In this way we are ensuring that the game is updating the position of the block every 200 milliseconds and not 60 times per second, avoiding the problem of the block moving too fast.
+
+def game_speed():
+    if game.score >= 14000: # Level 8
+        pygame.time.set_timer(GAME_UPDATE, 100)
+    if game.score >= 12000: # Level 7
+        pygame.time.set_timer(GAME_UPDATE, 125)
+    elif game.score >= 10000: # Level 6
+        pygame.time.set_timer(GAME_UPDATE, 150)
+    elif game.score >= 8000: # Level 5
+        pygame.time.set_timer(GAME_UPDATE, 175)
+    elif game.score >= 6000: # Level 4
+        pygame.time.set_timer(GAME_UPDATE, 200)
+    elif game.score >= 4000: # Level 3
+        pygame.time.set_timer(GAME_UPDATE, 300)
+    elif game.score >= 2000: # Level 2
+        pygame.time.set_timer(GAME_UPDATE, 400)
+    elif game.score < 2000: # Level 1
+        pygame.time.set_timer(GAME_UPDATE, 500)
 
 while True: # Game Loop starts with a wile loop like this. While loop is essential part of the game. It runs continuously until the player closes the game. At each iteration of the loop three key steps are performed: checking for events, updating positions of game objects and drawing the game objects in their new positions. Important to note that before running the game it is essential to ensure that the code inside the wile loop has been fully written. If the code is run at this point, the while loop will run indefinitely since there is no defined way to stop its execution. In the next step adding the necessary code to stop the while loop is needed.
     for event in pygame.event.get(): # This line of code gets all the events that Pygame recognizes and happened since the last time the while loop ran and puts them in a list. Then we loop through the list of events and check if any of the events is the QUIT event. The QUIT event is when we click on the close button of the window. If the event is the QUIT event, we break out of the while loop.
@@ -50,19 +68,21 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             if event.key == pygame.K_DOWN and game.game_over == False:
                 game.move_down()
                 game.update_score(0, 1) # Add score when the down key is pressed
-                game.move_sound.play()
             if event.key == pygame.K_UP and game.game_over == False: # Assign the action of pressing the up arrow key to rotating the block clockwise. In the game loop where we check for key presses we add this line.
                 game.rotate()
-            if game.score >= 10000:
-                pygame.time.set_timer(GAME_UPDATE, 100)
-            elif game.score >= 8000:
-                pygame.time.set_timer(GAME_UPDATE, 150)
-            elif game.score >= 6000:
-                pygame.time.set_timer(GAME_UPDATE, 200)
-            elif game.score >= 4000:
-                pygame.time.set_timer(GAME_UPDATE, 300)
-            elif game.score >= 2000:
-                pygame.time.set_timer(GAME_UPDATE, 400)
+
+            game_speed() # This line calls function to update down movement speed for the block, increasing with next level.
+        
+        # This block of code moves block down at increased speed while down arrow key is pressed.
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_DOWN:
+                pygame.time.set_timer(GAME_UPDATE, 70) # This line overrides game update speed making the block move faster.
+                game.move_sound.play(-1) # Move sound is played on the loop when down arrow key is pressed.
+        if event.type == pygame.KEYUP: 
+            if event.key == pygame.K_DOWN:
+                game_speed() # Calls function to stop update speed override and return relevant level speed.
+                game.move_sound.stop() # Stops move sound loop when key is not held down.
+
         if event.type == GAME_UPDATE and game.game_over == False: # Check for the last event. This code checks if the event type is equal to GAME_UPDATE and if it is, it calls the move_down() method of the game object. This ensures that the block's position is updated only when the GAME_UPDATE event is triggered and not every time the game loop is executed. # Stop the game from upating every 200 ms if the game is over and don't let the user move the block if the game is over. Added 'game.game_over == False'. This means the game will only update if it is not over.
             game.move_down()
 
@@ -77,8 +97,8 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
     if game.game_over == True: # Implement a check in the game loop before drawing the game over message to ensure that the message is only shown when th game is actually over.
         screen.blit(game_over_surface, (320, 450, 50 ,50))
     
-    # This code creates the next Level text with updated Level variable and plays the next Level sound.
-    if game.score >= 16000: # This block of code updates level when relevant score value is reached.
+    # This code creates the next 'Level' text surface with updated Level variable and plays the next Level sound.
+    if game.score >= 16000: # Level 9
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 8:
@@ -86,8 +106,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 7:
             game.level_sound.play()
             level_sound_played += 1
-
-    elif game.score >= 14000 and game.score < 16000: # Level 9
+    elif game.score >= 14000 and game.score < 16000: # Level 8
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 7:
@@ -95,8 +114,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 6:
             game.level_sound.play()
             level_sound_played += 1
-
-    elif game.score >= 12000 and game.score < 14000: # Level 8
+    elif game.score >= 12000 and game.score < 14000: # Level 7
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 6:
@@ -104,8 +122,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 5:
             game.level_sound.play()
             level_sound_played += 1
-
-    elif game.score >= 10000 and game.score < 12000: # Level 7
+    elif game.score >= 10000 and game.score < 12000: # Level 6
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 5:
@@ -113,8 +130,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 4:
             game.level_sound.play()
             level_sound_played += 1
-
-    elif game.score >= 8000 and game.score < 10000: # Level 6
+    elif game.score >= 8000 and game.score < 10000: # Level 5
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 4:
@@ -122,7 +138,6 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 3:
             game.level_sound.play()
             level_sound_played += 1
-
     elif game.score >= 6000 and game.score < 8000: # Level 4
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
@@ -131,7 +146,6 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 2:
             game.level_sound.play()
             level_sound_played += 1
-
     elif game.score >= 4000 and game.score < 6000: # Level 3
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
@@ -140,7 +154,6 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 1:
             game.level_sound.play()
             level_sound_played += 1
-            
     elif game.score >= 2000 and game.score < 4000: # Level 2
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
@@ -149,7 +162,6 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         if level_sound_played == 0:
             game.level_sound.play()
             level_sound_played += 1
-            
     else: # Level 1
         level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
