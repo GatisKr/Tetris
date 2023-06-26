@@ -31,9 +31,13 @@ GAME_UPDATE = pygame.USEREVENT # USEREVENT is a special event type in pygame tha
 pygame.time.set_timer(GAME_UPDATE, 500) # We want to triger this event every 200 milliseconds. This function creates a timer that will trigger the GAME_UPDATE event every 200 milliseconds. The first argument is the event that needs to be triggered and the second argument is interval in milliseconds. In this way we are ensuring that the game is updating the position of the block every 200 milliseconds and not 60 times per second, avoiding the problem of the block moving too fast.
 
 def game_speed():
-    if game.score >= 14000: # Level 8
+    if game.score >= 18000: # Level 10
+        pygame.time.set_timer(GAME_UPDATE, 50)
+    elif game.score >= 16000: # Level 9
+        pygame.time.set_timer(GAME_UPDATE, 75)
+    elif game.score >= 14000: # Level 8
         pygame.time.set_timer(GAME_UPDATE, 100)
-    if game.score >= 12000: # Level 7
+    elif game.score >= 12000: # Level 7
         pygame.time.set_timer(GAME_UPDATE, 125)
     elif game.score >= 10000: # Level 6
         pygame.time.set_timer(GAME_UPDATE, 150)
@@ -98,8 +102,16 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
         screen.blit(game_over_surface, (320, 450, 50 ,50))
     
     # This code creates the next 'Level' text surface with updated Level variable and plays the next Level sound.
+    if game.score >= 18000: # Level 10
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
+        screen.blit(level_surface, (350, 500, 50 ,50))
+        if game_level == 9:
+            game_level += 1
+        if level_sound_played == 8:
+            game.level_sound.play()
+            level_sound_played += 1
     if game.score >= 16000: # Level 9
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 8:
             game_level += 1
@@ -107,7 +119,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 14000 and game.score < 16000: # Level 8
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 7:
             game_level += 1
@@ -115,7 +127,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 12000 and game.score < 14000: # Level 7
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 6:
             game_level += 1
@@ -123,7 +135,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 10000 and game.score < 12000: # Level 6
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 5:
             game_level += 1
@@ -131,7 +143,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 8000 and game.score < 10000: # Level 5
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 4:
             game_level += 1
@@ -139,7 +151,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 6000 and game.score < 8000: # Level 4
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 3:
             game_level += 1
@@ -147,7 +159,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 4000 and game.score < 6000: # Level 3
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 2:
             game_level += 1
@@ -155,7 +167,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     elif game.score >= 2000 and game.score < 4000: # Level 2
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
         if game_level == 1:
             game_level += 1
@@ -163,7 +175,7 @@ while True: # Game Loop starts with a wile loop like this. While loop is essenti
             game.level_sound.play()
             level_sound_played += 1
     else: # Level 1
-        level_surface = title_font.render(f"LEVEL {game_level}", True, Colors.white)
+        level_surface = title_font.render(f"Level {game_level}", True, Colors.white)
         screen.blit(level_surface, (350, 500, 50 ,50))
     
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10) # Print score_rect. '0, 10' makes rectangle with rounded corners.
